@@ -1,4 +1,4 @@
-# come usefull tools wrote by python
+# some usefull tools wrote by python
 
 ## English
 Collect some tools wrote by python.
