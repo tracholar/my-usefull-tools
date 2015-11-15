@@ -12,6 +12,8 @@ Download message from baidu yun.
 ## google map downloader
 Download high resolution image from google map.
 
+## batch image compress
+Compress image without lost GPS information.
 
 ## 中文
 收集了一些python写的工具
@@ -25,3 +27,5 @@ Download high resolution image from google map.
 ## google map downloader
 从google地图下载高清大图。
 
+## batch image compress
+批量压缩图像，整理照片，同时保留GPS、拍照时间等信息。
