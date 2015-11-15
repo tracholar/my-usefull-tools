@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
     				long longDate = cur.getLong(idate);  
                     int intType = cur.getInt(itype);  
                     
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:dd");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date date = new Date(longDate);
                     String strDateString = dateFormat.format(date);
                     
