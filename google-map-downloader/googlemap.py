@@ -7,27 +7,35 @@ from maps import *
 import time
 from optparse import OptionParser
 import pickle
+from os.path import exists, join
+import ssl
 
+# fix SSL bug.
+ssl._create_default_https_context = ssl._create_unverified_context
 
 url = ''
+headers = None
 # baidu map
 # url = r'http://api.map.baidu.com/staticimage?center={long},{lat}&zoom=%d&width=%d&height=%d&copyright=1' % (zoom,imsize,imsize)
 # center = [40.143957,94.6297456]
 
 pos = []
 
-def DownloadMap():
+def DownloadMap(dir = './data'):
+	if not exists(dir):
+		os.mkdir(dir)
+		
 	while True:
 		if len(pos)==0:
 			return
 		long,lat = pos.pop()
 		mapurl = url.replace('{long}', '%f' % long).replace('{lat}', '%f' % lat)
-		
+		print 'GET:', mapurl
 
 		
 		ext = '%f_%f' % (lat,long)
 		ext = ext.replace('.','')
-		fn = 'map_%s.png' % ext
+		fn = join(dir, 'map_%s.png' % ext)
 		if os.path.exists(fn) and not options.clear:
 			continue
 		
@@ -55,11 +63,14 @@ if __name__ == '__main__':
 					  help="donwload region with(Left Top, Right Bottom). e.g 40.4,94.55,40.0,94.95", 
 						default = "40.4,94.55,40.0,94.95")
 	parser.add_option("-t", "--maptype", type="choice", dest="maptype",
-					  help="map type", default="satellite", 
+					  help="map type, satellite or roadmap", default="satellite", 
 					  choices=["satellite","roadmap"])
 	parser.add_option("-f",  action="store_true", dest="clear",
 					  help="force download ignore the file have donwloaded.", default=False)
-
+	parser.add_option("-d", "--dir", type="string", dest="dir",
+					  help="donwload to target. e.g D:/testdir/. Default ./data", 
+						default = "./data")
+						
 	(options, args) = parser.parse_args()
 	imsize = 512
 	zoom = options.zoom
@@ -88,7 +99,7 @@ if __name__ == '__main__':
 	y_range = range(T_y + imsize/2, B_y + imsize/2, dy)
 
 	# save config
-	conf = (x_range, y_range, dx, dy, L_x, T_y, R_x, B_y, zoom)
+	conf = (x_range, y_range, dx, dy, L_x, T_y, R_x, B_y, zoom, options.dir)
 	f = open('conf','wb')
 	pickle.dump(conf, f)
 	f.close()
@@ -108,8 +119,13 @@ if __name__ == '__main__':
 	
 		
 		
+	th = []
+	for i in range(10):
+		th.append(threading.Thread(target=DownloadMap, args=(options.dir,)))
+		th[i].start()
 	
 	for i in range(10):
-		threading.Thread(target=DownloadMap).start()
-		
-		
+		th[i].join()
+	
+	print 'start image merge.'
+	os.system('python imgmerge.py')
