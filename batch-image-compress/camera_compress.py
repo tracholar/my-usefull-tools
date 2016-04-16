@@ -8,6 +8,7 @@ from os.path import join
 from PIL import Image
 import sys
 import threading, thread
+import argparse
 
 
 def print_info(msg):
@@ -106,6 +107,14 @@ def batch_compress_image(src, target,
                         subdir)
 
 if __name__ == '__main__':  
-    assert(len(sys.argv)>=3)
-    batch_compress_image(sys.argv[1],sys.argv[2])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('src', help='source directory')
+    parser.add_argument('target', help='target directory')
+    parser.add_argument('--maxsize', '-s', type=int, default=1080, help='max pixel, eg: 720 1080')
+    parser.add_argument('--nthread', '-n', type=int, default=10, help='How many threads.')
+    
+    
+    args = parser.parse_args()
+    
+    batch_compress_image(args.src, args.target, max_size=args.maxsize, n_thread=args.nthread)
     print 'Done!'
