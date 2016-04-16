@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -36,7 +37,17 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         TextView tv = (TextView) findViewById(R.id.tv);
-        tv.setText(getMsg());
+        
+        File storageDirFile = new File("/mnt/");
+        if(storageDirFile.isDirectory()){
+        	String[] dirListStrings = storageDirFile.list();
+        	for(String dir : dirListStrings){
+        		tv.append(dir + "\n");
+        	}
+        	tv.append(System.getenv()+"\n");
+        }
+        
+        tv.append(getMsg());
     }
     
     private String getMsg(){
@@ -170,6 +181,13 @@ public class MainActivity extends Activity {
     	tv.setText("正在导出短信到文件...\n");
     	saveMsg();
     	tv.append("导出结束！\n");
+    }
+    public void onSelectDir(View v){
+    	Intent it = new Intent(getBaseContext(), FileSelectorActivity.class);
+    	
+    	//startActivity(it);
+    	
+    	
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
