@@ -4,9 +4,10 @@ from PIL import Image
 import numpy as np
 import pickle
 from googlemap import *
+from os.path import join
 
 f = open('conf','rb')
-x_range, y_range, dx, dy, L_x, T_y, R_x, B_y, zoom = pickle.load(f)
+x_range, y_range, dx, dy, L_x, T_y, R_x, B_y, zoom, dir = pickle.load(f)
 f.close()
 
 n_X = len(x_range)
@@ -20,6 +21,7 @@ for x in x_range:
 		long, lat = Pixel2Long(x, zoom), Pixel2Lat(y, zoom)
 		im_name = 'map_%f_%f' % (lat,long)
 		im_name = im_name.replace('.','') + '.png'
+		im_name = join(dir, im_name)
 		
 		try:
 			I = Image.open(im_name)
@@ -28,5 +30,6 @@ for x in x_range:
 			T = int((y - T_y)/dy) 
 			im.paste(I,(L*dx,T*dy))
 		except Exception:
+			print 'Error: image merge!'
 			pass
-im.save('bigimg.png')
+im.save(join(dir, 'bigimg.png'))
