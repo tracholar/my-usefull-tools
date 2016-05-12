@@ -9,7 +9,7 @@ def getdirsize(dir):
                 s = getsize(join(root, name))
             except Exception:
                 s = 0
-                sys.stderr.write(join(root, name),'exception')
+                sys.stderr.write(join(root, name) + 'exception' + '\n')
             size += s
     return size
 
