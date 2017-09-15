@@ -1,2 +1,5 @@
 *.pyc
 *.pyx
+.idea
+*.iml
+.DS_Store
