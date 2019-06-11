@@ -77,6 +77,10 @@ if __name__ == '__main__':
     args = parse.parse_args()
     if args.server:
         run_server()
+        exit(0)
+    if args.key is None or args.msg is None:
+        parse.print_help()
+        exit(1)
     elif args.decode:
         print(decode(args.key, args.msg))
     else:
