@@ -42,14 +42,42 @@ def decode(key, msg):
 
     return out.rstrip(chr(0))
 
+def run_server():
+    from flask import Flask, render_template, request
+    import json, random
+    app = Flask(__name__)
+
+    @app.route('/', methods = ['GET', 'POST'])
+    def index():
+        if request.method == 'GET':
+            return render_template('index.html')
+        else:
+            mode = request.form['mode']
+            key = request.form['key']
+            msg = request.form['msg']
+            if mode == 'encode':
+                out = encode(key, msg)
+            elif mode == 'decode':
+                out = decode(key, msg)
+            data = {
+                'out' : out,
+                'status' : 200
+            }
+            return json.dumps(data, ensure_ascii=False), {'Content-Type':'application/json'}
+
+    app.run('0.0.0.0', port=random.randint(2049, 10000))
+
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(description=u'密码加密工具')
+    parse.add_argument('-s', '--server', action='store_true', help=u'启动web服务')
     parse.add_argument('-d', '--decode', action='store_true', help=u'解密模式,默认是加密模式')
     parse.add_argument('-k', '--key', help=u'秘钥')
-    parse.add_argument('msg', help=u'消息内容')
+    parse.add_argument('msg', nargs='?', help=u'消息内容')
     args = parse.parse_args()
-    if args.decode:
+    if args.server:
+        run_server()
+    elif args.decode:
         print(decode(args.key, args.msg))
     else:
         print(encode(args.key, args.msg))
