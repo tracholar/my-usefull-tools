@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
+"""
+使用方法：
+1. 如果系统没有python，请先安装python。
+2. 启动命令行，windows操作系统中是：开始 > 命令提示符。Mac操作系统中是：应用程序 > 终端。
+3. 在命令行中输入以下命令：  python  pwgen.py -s
+4. 正常情况下，会有一些输出信息，找到类似于 http://0.0.0.0:3722  的网址，复制到浏览器打开即可。
+"""
 from __future__ import print_function
 import argparse
 import base64
