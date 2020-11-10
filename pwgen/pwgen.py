@@ -50,11 +50,19 @@ def run_server():
     @app.route('/', methods = ['GET', 'POST'])
     def index():
         if request.method == 'GET':
-            return render_template('index.html')
+            tpl = u'''
+<form action="/" method="post">
+    秘钥: <input name="key" type="password">
+    数据: <input name="msg">
+    模式: <input type="radio" name="mode" value="encode" checked>加密 <input type="radio" name="mode" value="decode">解密
+    <input type="submit" value="提交" onclick="">
+</form>
+			'''
+            return tpl, {'Context-Type': 'text/html;charset:utf-8'}
         else:
             mode = request.form['mode']
-            key = request.form['key']
-            msg = request.form['msg']
+            key = str(request.form['key'])
+            msg = str(request.form['msg'])
             if mode == 'encode':
                 out = encode(key, msg)
             elif mode == 'decode':
